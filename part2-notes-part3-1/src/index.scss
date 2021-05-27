@@ -1,8 +1,6 @@
 @import "../node_modules/font-awesome/css/font-awesome.min.css";
 @import "../node_modules/bulma/css/bulma.min.css";
 
-$brand-image: "./resources/logo.png";
-
 html,
 body {
 	background: #eff3f4;
@@ -29,6 +27,18 @@ h1 {
 	border-radius: 5px;
 	padding: 10px;
 	margin-bottom: 10px;
+}
+
+.navbar{
+	background-color: #6dc7cc;
+	z-index: 1;
+	position: fixed;
+	top: 0;
+	width: 100%;
+}
+
+.tabs a{
+	color: #fff;
 }
 
 .hero-body .container {
@@ -69,7 +79,7 @@ h1 {
 	margin-bottom: 2rem;
 }
 .intro {
-	padding: 5rem 0;
+	padding-top: 5rem;
 	text-align: center;
 }
 .sandbox {
@@ -92,6 +102,12 @@ h1 {
 }
 .is-shady:hover {
 	box-shadow: 0 10px 16px rgba(0, 0, 0, 0.13), 0 6px 6px rgba(0, 0, 0, 0.19);
+}
+
+.category-title{
+	text-align: center;
+  font-size: x-large;
+	padding-top: 0.5em;
 }
 /*adds font awesome stars*/
 footer li:before {
@@ -143,12 +159,15 @@ footer li:before {
 }
 
 .hero-body {
-	padding: 4rem 1.5rem !important;
 	background-color: #e8dbe2;
 }
 
 .hero-head {
 	background-color: #6dc7cc;
+	z-index: 1;
+	position: fixed;
+	top: 0;
+	width: 100%;
 }
 
 .modal {
@@ -183,8 +202,7 @@ footer li:before {
 #login .login-card .content {
 	padding: 3rem 2.5rem 5rem;
 }
-#login .login-card #email,
-#login .login-card #password {
+#login .login-card .field {
 	display: block;
 	width: 100%;
 	font-size: 1rem;
@@ -194,14 +212,11 @@ footer li:before {
 	border-bottom: 1px solid #dbdbdb;
 	transition: all 0.5s;
 }
-#login .login-card #email:hover,
-#login .login-card #password:hover {
+#login .login-card .field:hover {
 	border-color: #7a7a7a;
 }
-#login .login-card #email:active,
-#login .login-card #email:focus,
-#login .login-card #password:active,
-#login .login-card #password:focus {
+#login .login-card #field:active,
+#login .login-card #field:focus {
 	border-color: #00d1b2;
 }
 #login .login-card .checkbox {
@@ -237,6 +252,18 @@ footer li:before {
 }
 #login .login-card button:active {
 	transform: translateY(1px);
+}
+
+#login .login-card button.create-btn {
+	color: #fff;
+	background-color: #00b89c;
+	margin-top: 1rem;
+}
+
+#login .login-card button.create-btn:hover,
+#login .login-card button.create-btn:focus {
+	border-color: #00907b;
+	background-color: #009e86;
 }
 
 label {
@@ -288,4 +315,54 @@ button:focus {
 .card-image {
 	max-height: 400px;
 	max-width: 600px;
+}
+
+a.dropdown-item {
+	color: #4a4a4a !important;
+	border-bottom-style: none;
+}
+
+.navbar {
+	min-height: 8rem;
+}
+
+.dropdown-menu {
+	z-index: 50;
+}
+
+.tabs {
+	overflow: visible;
+	overflow-x: visible;
+}
+
+.icon-card{
+	padding-top: 1em;
+	margin: auto;
+	display: flex;
+	justify-content: space-evenly;
+}
+
+.tag{
+	border-radius: 0;
+}
+
+.course-header{
+	margin-top: 10rem;
+}
+
+.course-card{
+	min-height: 380px;
+	position: relative;
+}
+
+.course-likes{
+	position: absolute;
+	left: 6%;
+}
+
+.course-prog{
+	position: absolute;
+  bottom: 10%;
+	left: 10%;
+	width: 80%;
 }

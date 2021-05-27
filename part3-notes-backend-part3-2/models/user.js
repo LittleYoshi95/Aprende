@@ -6,12 +6,13 @@ const userSchema = new mongoose.Schema({
 		type: String,
 		unique: true
 	},
+	email: String,
 	name: String,
 	passwordHash: String,
-	notes: [
+	favCourses: [
 		{
 			type: mongoose.Schema.Types.ObjectId,
-			ref: "Note"
+			ref: "Course"
 		}
 	]
 })

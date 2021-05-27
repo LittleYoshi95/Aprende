@@ -1,16 +1,17 @@
 import React, { useState, useEffect } from "react"
-import Note from "./components/Note"
-import Notification from "./components/Notification"
-import Footer from "./components/Footer"
+import { BrowserRouter as Router, Switch, Route } from "react-router-dom"
 import noteService from "./services/notes"
+import courseService from "./services/courses"
 import loginService from "./services/login"
 import NavBar from "./components/navbar"
 import Banner from "./components/banner"
 import SectionTitle from "./components/SectionTitle"
 import Cards from "./components/cards"
+import Categories from "./components/categories"
+import CourseView from "./components/courseTemp"
 
 const App = () => {
-	const [notes, setNotes] = useState([])
+	const [courses, setCourses] = useState([])
 	const [newNote, setNewNote] = useState("")
 	const [showAll, setShowAll] = useState(false)
 	const [errorMessage, setErrorMessage] = useState(null)
@@ -23,8 +24,8 @@ const App = () => {
 	const [user, setUser] = useState(null)
 
 	useEffect(() => {
-		noteService.getAll().then((initialNotes) => {
-			setNotes(initialNotes)
+		courseService.getAll().then((initialNotes) => {
+			setCourses(initialNotes)
 		})
 	}, [])
 
@@ -34,11 +35,11 @@ const App = () => {
 			const user = JSON.parse(loggedUserJSON)
 			setUser(user)
 			setUsername(user.username)
-			noteService.setToken(user.token)
+			courseService.setToken(user.token)
 		}
 	}, [])
 
-	const addNote = (event) => {
+	/* const addNote = (event) => {
 		event.preventDefault()
 		const noteObject = {
 			content: newNote,
@@ -50,9 +51,9 @@ const App = () => {
 			setNotes(notes.concat(returnedNote))
 			setNewNote("")
 		})
-	}
+	} */
 
-	const toggleImportanceOf = (id) => {
+	/* const toggleImportanceOf = (id) => {
 		const note = notes.find((n) => n.id === id)
 		const changedNote = { ...note, important: !note.important }
 
@@ -69,16 +70,16 @@ const App = () => {
 					setErrorMessage(null)
 				}, 5000)
 			})
-	}
+	} */
 
 	const toggleModal = () => {
 		setModal(!modalState)
 	}
 
-	const handleNoteChange = (event) => {
+	/* const handleNoteChange = (event) => {
 		console.log(event.target.value)
 		setNewNote(event.target.value)
-	}
+	} */
 
 	const handleUserChange = (event) => {
 		console.log(event.target.value)
@@ -90,7 +91,7 @@ const App = () => {
 		setPassword(event.target.value)
 	}
 
-	const notesToShow = showAll ? notes : notes.filter((note) => note.important)
+	//const notesToShow = showAll ? notes : notes.filter((note) => note.important)
 
 	const handleLogin = async (event) => {
 		event.preventDefault()
@@ -100,7 +101,7 @@ const App = () => {
 				password
 			})
 
-			noteService.setToken(user.token)
+			courseService.setToken(user.token)
 			window.localStorage.setItem("loggedNoteappUser", JSON.stringify(user))
 
 			setUser(user)
@@ -116,40 +117,29 @@ const App = () => {
 		}
 	}
 
-	const loginForm = () => (
-		<form onSubmit={handleLogin}>
-			<div>
-				username
-				<input
-					type="text"
-					value={username}
-					name="Username"
-					onChange={handleUserChange}
-				/>
-			</div>
-			<div>
-				password
-				<input
-					type="password"
-					value={password}
-					name="Password"
-					onChange={handlePassChange}
-				/>
-			</div>
-			<button type="submit">login</button>
-		</form>
-	)
+	const handleLogOut = () => {
+		window.localStorage.removeItem("loggedNoteappUser")
+		noteService.setToken("")
 
-	const noteForm = () => (
+		setUser(null)
+		setUsername("")
+		setPassword("")
+	}
+
+	const favorite = (curso) => {
+		setCourses(courses.map((course) => (course.id !== curso.id ? course : curso)))
+	}
+
+/* 	const noteForm = () => (
 		<form onSubmit={addNote}>
 			<input value={newNote} onChange={handleNoteChange} />
 			<button type="submit">save</button>
 		</form>
-	)
+	) */
 
 	return (
-		<div>
-			<Banner>
+		<Router>
+			<div>
 				<NavBar
 					user={user}
 					username={username}
@@ -157,43 +147,26 @@ const App = () => {
 					handleUserChange={handleUserChange}
 					handlePassChange={handlePassChange}
 					handleSubmit={handleLogin}
+					handleLogOut={handleLogOut}
 					toggleModal={toggleModal}
 					modalState={modalState}
 				/>
-			</Banner>
-			<section className="container">
-				<SectionTitle />
-				<Cards />
-			</section>
-			{/* <h1>Notes</h1>
-			<Notification message={errorMessage} />
-
-			{user === null ? (
-				loginForm()
-			) : (
-				<div>
-					<p>{user.name} logged in</p>
-					{noteForm()}
-				</div>
-			)}
-
-			<div>
-				<button onClick={() => setShowAll(!showAll)}>
-					show {showAll ? "important" : "all"}
-				</button>
+				<Switch>
+					<Route path="/curso/:id">
+						<CourseView courses={courses}/>
+					</Route>
+					<Route path="/">
+						<Banner />
+						<section className="container">
+							<SectionTitle title="Cursos mas populares" text="Dale un vistazo a los cursos favoritos de nuestros usuarios"/>
+							<Cards courses={courses} fav={favorite} user={user}/>
+							<SectionTitle title="Categorias principales" text=""/>
+							<Categories />
+						</section>
+					</Route>
+				</Switch>
 			</div>
-			<ul>
-				{notesToShow.map((note) => (
-					<Note
-						key={note.id}
-						note={note}
-						toggleImportance={() => toggleImportanceOf(note.id)}
-					/>
-				))}
-			</ul>
-
-			<Footer /> */}
-		</div>
+		</Router>	
 	)
 }
 

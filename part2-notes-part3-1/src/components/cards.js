@@ -1,74 +1,65 @@
-import React from "react"
-import StockIT from "../resources/stockIT.jpg"
-import StockPiano from "../resources/stockPiano.jpg"
-import StockBari from "../resources/stockBarista.jpg"
+import React, {useState} from "react"
+import {Link} from "react-router-dom"
+import courseService from "../services/courses"
 
-const Cards = () => {
+
+const Cards = ({ courses, fav, user }) => {
+
+	const [faved, setFaved] = useState(false)
+
+	const cards = courses.sort((a, b) => b.likes - a.likes).slice(0, 3)
+
+	const handleFav = (event, id) => {
+		if(user){
+			if(event.target.className === "fa fa-heart fa-2x"){
+				event.target.className = "fa fa-heart-o fa-2x"
+			}else {
+				event.target.className = "fa fa-heart fa-2x"
+			}
+			console.log(event.target.className)
+		
+			const curso = cards.find((c) => c.id === id)
+			const favedCurso = {...curso, likes: curso.likes + 1}
+			const body = {favedCurso, username: user.username }
+	
+			courseService
+				.update(id, body)
+				.then((returnedCurso) => fav(returnedCurso))
+				.catch((err) => {
+						console.log(err)
+					})
+		}
+	}
+
 	return (
-		<div className="column features">
-			<div className="column is-4">
-				<div className="card is-shady">
-					<div className="card-image has-text-centered">
-						<img src={StockIT}></img>
-					</div>
-					<div className="card-content">
-						<div className="content">
-							<h4>Tristique senectus et netus et. </h4>
-							<p>
-								Purus semper eget duis at tellus at urna condimentum mattis. Non
-								blandit massa enim nec. Integer enim neque volutpat ac tincidunt
-								vitae semper quis. Accumsan tortor posuere ac ut consequat
-								semper viverra nam.
-							</p>
-							<p>
-								<a href="#">Learn more</a>
-							</p>
+		<div className="columns is-multiline is-centered features">
+			{cards.map((card, index) => {
+				return(
+					<div className="column is-3" key={index}>
+						<div className="card is-shady">
+							<div className="image is-5by3">
+								<Link to={`/curso/${card.id}`}>
+									<img src={card.img}></img>
+								</Link>
+							</div>
+							<div className="card-content">
+								<div className="content">
+									<h4>{card.title}</h4>
+									<p>
+										{card.description}
+									</p>
+								</div>
+							</div>
+							<div className="card-footer">
+								<span className="icon-card">
+									<i className="fa fa-heart-o fa-2x" onClick={(event) => handleFav(event, card.id)}></i>
+								</span>
+								<span className="tag is-info">{card.category}</span>
+							</div>
 						</div>
 					</div>
-				</div>
-			</div>
-			<div className="column is-4">
-				<div className="card is-shady">
-					<div className="card-image has-text-centered">
-						<img src={StockPiano}></img>
-					</div>
-					<div className="card-content">
-						<div className="content">
-							<h4>Tristique senectus et netus et. </h4>
-							<p>
-								Purus semper eget duis at tellus at urna condimentum mattis. Non
-								blandit massa enim nec. Integer enim neque volutpat ac tincidunt
-								vitae semper quis. Accumsan tortor posuere ac ut consequat
-								semper viverra nam.
-							</p>
-							<p>
-								<a href="#">Learn more</a>
-							</p>
-						</div>
-					</div>
-				</div>
-			</div>
-			<div className="column is-4">
-				<div className="card is-shady">
-					<div className="card-image has-text-centered">
-						<img src={StockBari}></img>
-					</div>
-					<div className="card-content">
-						<div className="content">
-							<h4>Tristique senectus et netus et. </h4>
-							<p>
-								Purus semper eget duis at tellus at urna condimentum mattis. Non
-								blandit massa enim nec. Integer enim neque volutpat ac tincidunt
-								vitae semper quis. Accumsan tortor posuere ac ut consequat
-								semper viverra nam.
-							</p>
-							<p>
-								<a href="#">Learn more</a>
-							</p>
-						</div>
-					</div>
-				</div>
-			</div>
+				)
+			})}
 		</div>
 	)
 }

@@ -1,14 +1,12 @@
 import React from "react"
 
-const SectionTitle = () => {
+const SectionTitle = ({title, text}) => {
 	return (
 		<div className="intro column is-8 is-offset-2">
-			<h2 class="title">Perfect for developers or designers!</h2>
+			<h2 className="title">{title}</h2>
 			<br></br>
-			<p class="subtitle">
-				Vel fringilla est ullamcorper eget nulla facilisi. Nulla facilisi nullam
-				vehicula ipsum a. Neque egestas congue quisque egestas diam in arcu
-				cursus.
+			<p className="subtitle">
+				{text}
 			</p>
 		</div>
 	)
